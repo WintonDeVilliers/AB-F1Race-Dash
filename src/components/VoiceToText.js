@@ -1,9 +1,19 @@
 import { useState } from 'react';
-import styles from '../styles/VoiceToText.module.css';
+import Footer from '@/components/Footer';
+import CheckListHeader from '@/components/CheckListHeader';
+import styles from '../styles/CheckListTable.module.css';
 
-const VoiceToText = () => {
+const Checklist = () => {
   const [transcript, setTranscript] = useState('');
   const [isRecording, setIsRecording] = useState(false);
+  const [score, setScore] = useState(0);
+
+  const statements = [
+    'I want cheese cake',
+    'pass the remote',
+    'Its lunch time',
+    // Add  predefined statements 
+  ];
 
   const startRecording = () => {
     setIsRecording(true);
@@ -19,6 +29,33 @@ const VoiceToText = () => {
     const lastResultIndex = e.results.length - 1;
     const lastTranscript = e.results[lastResultIndex][0].transcript;
     setTranscript((prevTranscript) => prevTranscript + lastTranscript + ' ');
+
+    const currentScore = calculateScore(lastTranscript);
+    setScore(currentScore);
+  };
+
+  const calculateScore = (transcript) => {
+    let highestScore = 0;
+
+    for (let i = 0; i < statements.length; i++) {
+      const statement = statements[i].toLowerCase();
+      const transcriptLower = transcript.toLowerCase();
+
+      if (transcriptLower.includes(statement)) {
+        const wordsInStatement = statement.split(' ');
+        const wordsInTranscript = transcriptLower.split(' ');
+        const matchedWordsCount = wordsInStatement.filter((word) => wordsInTranscript.includes(word)).length;
+        const score = (matchedWordsCount / wordsInStatement.length) * 10;
+
+        if (score === 10) return 10; // If all words are matched, return maximum score
+
+        if (score > highestScore) {
+          highestScore = score;
+        }
+      }
+    }
+
+    return highestScore;
   };
 
   const SpeechRecognition = typeof window !== 'undefined' && (window.SpeechRecognition || window.webkitSpeechRecognition);
@@ -30,57 +67,156 @@ const VoiceToText = () => {
   }
 
   return (
-    <div className={styles.container}>
-      <div className={styles.tableContainer}>
-        <div className={`table-responsive ${styles.responsiveTable}`}>
-          <table className={`table table-bordered ${styles.table}`}>
-            <thead>
-              <tr>
-                <th>Column 1</th>
-                <th>Column 2</th>
-                <th>Column 3</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Array.from({ length: 10 }, (_, index) => (
-                <tr key={index}>
-                  <td>Before we continue (Customer name), please note that African Bank is an authorised Financial Services and Credit Provider, it holds Professional Indemnity and Fidelity Insurance Cover, and as a standard procedure all our calls are recorded for quality and security purposes. I am a registered representative authorised to sell Long Term Insurance Subcategory A, B1- A and B2 -A Which is Funeral Policies & Credit Life.s {index + 1}</td>
-                  <td>Data {index + 1}</td>
-                  <td>Data {index + 1}</td>
+    <>
+      <div>
+        <CheckListHeader />
+        <div className={styles.open_section}>
+          <h1 className={styles.headline}>
+            <mark className={styles.mark}>COMPLIANCE CHECK LIST</mark>
+          </h1>
+        </div>
+
+        <div className={styles.table_section}>
+          <div className={styles.table}>
+            <table>
+              <thead>
+                <tr>
+                  <th className="">ALERT LEVEL</th>
+                  <th className={styles.row_name}>ATTEMPT RATING</th>
+                  <th className={styles.row_job}>COMPLIANCE STATEMENT</th>
                 </tr>
-              ))}
-            </tbody>
-            <tfoot>
-              <tr>
-                <td colSpan="4" className={styles.buttonsContainer}>
-                  <button
-                    onClick={startRecording}
-                    disabled={isRecording}
-                    className={`${styles.btn} ${styles.btnStartRecording}`}
-                  >
-                    Start Recording
-                  </button>
-                  <button
-                    onClick={stopRecording}
-                    disabled={!isRecording}
-                    className={`${styles.btn} ${styles.btnStopRecording}`}
-                  >
-                    Stop Recording
-                  </button>
-                </td>
-              </tr>
-            </tfoot>
-          </table>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className={styles.alert_red}>Alert level value</td>
+                  <td>{score}</td>
+                  <td>{transcript}</td>
+                </tr>
+
+                <tr>
+                  <td>Alert level value</td>
+                  <td>{score}</td>
+                  <td>{transcript}</td>
+                </tr>
+
+                <tr>
+                  <td>Alert level value</td>
+                  <td>{score}</td>
+                  <td>{transcript}</td>
+                </tr>
+
+                <tr>
+                  <td>Alert level value</td>
+                  <td>{score}</td>
+                  <td>{transcript}</td>
+                </tr>
+
+                <tr>
+                  <td>Alert level value</td>
+                  <td>{score}</td>
+                  <td>{transcript}</td>
+                </tr>
+
+                <tr>
+                  <td>Alert level value</td>
+                  <td>{score}</td>
+                  <td>{transcript}</td>
+                </tr>
+
+                <tr>
+                  <td>Alert level value</td>
+                  <td>{score}</td>
+                  <td>{transcript}</td>
+                </tr>
+              </tbody>
+            </table>
+          <div className={styles.buttons}>
+          <button onClick={startRecording} disabled={isRecording}>
+            Start
+          </button>
+          <button onClick={stopRecording} disabled={!isRecording}>
+            Stop
+          </button>
+        </div>
+          </div>
+        {/* SECOND TABLE */}
+        <div className={styles.open_section}>
+          <h1 className={styles.headline}>
+            <mark className={styles.mark}>FUNERAL CHECK LIST</mark>
+          </h1>
         </div>
 
-        <div className={styles.voiceToTextContainer}>
-          <h1 className={styles.heading}>Voice to Text</h1>
+        <div className={styles.table_section}>
+          <div className={styles.table}>
+            <table>
+              <thead>
+                <tr>
+                  <th className="">ALERT LEVEL</th>
+                  <th className={styles.row_name}>ATTEMPT RATING</th>
+                  <th className={styles.row_job}>COMPLIANCE STATEMENT</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Alert level value</td>
+                  <td>Score</td>
+                  <td>Transcript</td>
+                  {/* <td>{score}</td>
+                  <td>{transcript}</td> */}
+                </tr>
 
-          <div className={styles.transcript}>{transcript}</div>
+                <tr>
+                  <td>Alert level value</td>
+                  <td>{score}</td>
+                  <td>{transcript}</td>
+                </tr>
+
+                <tr>
+                  <td>Alert level value</td>
+                  <td>{score}</td>
+                  <td>{transcript}</td>
+                </tr>
+
+                <tr>
+                  <td>Alert level value</td>
+                  <td>{score}</td>
+                  <td>{transcript}</td>
+                </tr>
+
+                <tr>
+                  <td>Alert level value</td>
+                  <td>{score}</td>
+                  <td>{transcript}</td>
+                </tr>
+
+                <tr>
+                  <td>Alert level value</td>
+                  <td>{score}</td>
+                  <td>{transcript}</td>
+                </tr>
+
+                <tr>
+                  <td>Alert level value</td>
+                  <td>{score}</td>
+                  <td>{transcript}</td>
+                </tr>
+
+                <tr>
+                  <td>Alert level value</td>
+                  <td>{score}</td>
+                  <td>{transcript}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
+        </div>
+
+
+
       </div>
-    </div>
+    </>
   );
 };
 
-export default VoiceToText;
+export default Checklist;

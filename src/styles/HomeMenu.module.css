@@ -1,0 +1,94 @@
+.csnavbar {
+  display: flex;
+  padding: 20px;
+  overflow: hidden;
+  background: #002b60;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  overflow: visible;
+  font: 12px 'opensans-bold', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin: 0 auto;
+  z-index: 100;
+  left: 0;
+}
+
+.csnav_img {
+  position: fixed;
+  top: 20px;
+  right: 20px; /* Adjust the right value as needed */
+}
+
+.menu_icon {
+  display: none;
+  color: #f2f2f2;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.menu {
+  display: flex;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menu li {
+  margin-right: 20px;
+}
+
+.menu a {
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  text-decoration: none;
+}
+
+.menu a:hover {
+  background: #ddd;
+  color: black;
+  border-radius: 12px;
+}
+
+/* Adjusted media query */
+@media screen and (max-width: 768px) {
+  .menu_icon {
+    display: none;
+  }
+  
+  .menu {
+    display: flex;
+    flex-direction: column;
+    background: #002b60;
+    position: fixed;
+    top: 70px;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    visibility: hidden; /* Hide the menu items by default */
+    opacity: 0;
+    transition: visibility 0s, opacity 0.5s;
+  }
+  
+  .menu._show {
+    visibility: visible; /* Show the menu items when the menu icon is clicked */
+    opacity: 1;
+    transition: visibility 0s, opacity 0.5s;
+  }
+  
+  .menu a {
+    padding: 10px;
+    border-radius: 8px;
+  }
+  
+  .csnavbar:hover .menu_icon {
+    display: none;
+  }
+  
+  .csnavbar:hover .menu {
+    display: flex;
+  }
+}

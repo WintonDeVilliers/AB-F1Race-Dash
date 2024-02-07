@@ -3,50 +3,56 @@
   padding: 20px;
   overflow: hidden;
   background: #002b60;
-  position: fixed; /* Set the navbar to fixed position */
-  top: 0; /* Position the navbar at the top of the page */
-  width: 100%; /* Full width */
+  position: fixed;
+  top: 0;
+  width: 100%;
   overflow: visible;
   font: 12px 'opensans-bold', sans-serif;
-  
   text-transform: uppercase;
   letter-spacing: 1.5px;
   margin: 0 auto;
   z-index: 100;
-  position: fixed;
   left: 0;
 }
 
-
-
-
-.csnav_img{
-    /* align-self: flex-end; */
-    border-radius: 9px;
-    padding-bottom: 8px;
-    /* width: 30px; */
-    /* height: 30px; */
-    padding-left: 650px;
-
+.csnav_img {
+  position: fixed;
+  top: 20px;
+  right: 20px; /* Adjust the right value as needed */
 }
 
-/* Links inside the navbar */
 .csnavbar a {
-  /* float: left; */
   display: block;
   color: #f2f2f2;
-  /* color: black; */
   text-align: center;
   padding: 14px 10px;
   text-decoration: none;
 }
 
-/* Change background on mouse-over */
 .csnavbar a:hover {
   background: #ddd;
   color: black;
   border-radius: 12px;
 }
+
+@media screen and (max-width: 768px) {
+  .csnavbar {
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .csnav_img {
+    position: fixed;
+    top: 0;
+    right: 0;
+    margin-top: 20px;
+    margin-right: 20px;
+  }
+}
+
+
+
  
 .headline{
 font-size: 52px;
@@ -117,8 +123,8 @@ margin: 0.5%;
 }
 
 .card:hover{
-  background-color: #33959E;
-  color: white;
+  background-color: #97bae5;
+  color: black;
 }
 
 

@@ -19,7 +19,7 @@ export default function CheckListHeader() {
       <Link href="/call_scripts">SCRIPTS</Link>
       <Link href="/products">PRODUCTS</Link>
       <Link href="#">SUPPORT</Link>
-      <Link href="#">NOTICE-BOARD</Link>
+      {/* <Link href="#">NOTICE-BOARD</Link> */}
     <img className={styles.csnav_img} src="africanbank.svg" alt="Pichere" />
 </div>        
   )
