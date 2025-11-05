@@ -1,13 +1,15 @@
-.layout {
+/* .layout {
   min-height: 100vh;
   background: linear-gradient(135deg, #1a365d 0%, #2d3748 100%);
   color: #ffffff;
-}
+} */
 
 .main {
-  padding: 1rem;
+  padding-right: 10rem;
+  padding-left: 10rem;
   max-width: 1400px;
   margin: 0 auto;
+  /* background-image: url("/race_bg.jpg"); */
 }
 
 /* Navigation styles */
@@ -43,7 +45,7 @@
   color: #ff6b35;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1401px) {
   .main {
     padding: 0.5rem;
   }

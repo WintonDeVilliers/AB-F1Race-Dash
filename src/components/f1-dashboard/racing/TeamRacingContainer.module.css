@@ -56,10 +56,10 @@
 
 .tabButton {
   padding: 0.75rem 1.5rem;
-  background: rgba(255, 255, 255, 0.05);
+  background:rgba(93, 195, 0);
   border: 2px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(0, 0, 0, 0.7);
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
@@ -71,16 +71,16 @@
 .tabButton:hover {
   background: rgba(255, 255, 255, 0.08);
   border-color: rgba(255, 107, 53, 0.3);
-  color: rgba(255, 255, 255, 0.9);
+  color: #000;
 }
 
 .tabButton.active {
-  background: rgba(255, 107, 53, 0.2);
-  border-color: #ff6b35;
-  color: #ff6b35;
+  background:rgba(0, 43, 96, 1);
+  border-color: #5DC300;
+  /* color: #002b60; */
+  color:#ffff;
   box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
 }
-
 /* Responsive Design */
 @media (max-width: 768px) {
   .container {
@@ -100,4 +100,62 @@
     width: 100%;
     max-width: 300px;
   }
+}
+
+
+
+
+
+
+
+
+
+.topConsultants {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.consultantGrid {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.consultantCard {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 1rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  width: 160px;
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.consultantCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+}
+
+.consultantImage {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #eee;
+  margin-bottom: 0.5rem;
+}
+
+.consultantName {
+  font-weight: 600;
+  font-size: 1rem;
+  margin: 0.25rem 0;
+  color: #333;
+}
+
+.consultantScore {
+  font-size: 1rem;
+  color: #020202;
+  font-weight: bold;
 }

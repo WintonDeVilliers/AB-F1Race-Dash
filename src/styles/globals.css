@@ -1,17 +1,16 @@
 html {
-    height: 100%;
-    max-width: none;
+  height: 100%;
+  max-width: none;
 }
 
-
-body{
+body {
   /* background-size: contain;
   background-image: linear-gradient(to right bottom, #002a5e, #005486, #007c8a, #00a06e, #88bc47); */
-  background: rgb(0,84,134);
-  background: radial-gradient(circle, rgba(136,188,71,1)  0%, rgba(0,84,134,1) 100%);
+  /* background: rgb(0,84,134); */
+  /* background: radial-gradient(circle, rgba(136,188,71,1)  0%, rgba(0,84,134,1) 100%); */
   max-width: none;
   /* padding-left: 24px; */
-   /* display: grid;
+  /* display: grid;
    grid-template-rows: auto 1fr auto; */
   /* grid-template-columns: 1fr 6fr; */
   height: 100vh;
@@ -19,4 +18,4 @@ body{
 }
 
 /* F1 Racing Dashboard Theme */
-@import '../styles/f1-dashboard/theme.css';
+@import "../styles/f1-dashboard/theme.css";

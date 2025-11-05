@@ -1,19 +1,19 @@
-import { useState, useEffect } from 'react';
-import DashboardLayout from './dashboard/DashboardLayout';
-import NoDataMessage from './dashboard/NoDataMessage';
-import GaugeContainer from './gauges/GaugeContainer';
-import PitCrewContainer from './pitcrew/PitCrewContainer';
-import TeamRacingContainer from './racing/TeamRacingContainer';
-import MonacoCircuitView from './circuits/MonacoCircuitView';
-import KyalamiCircuitView from './circuits/KyalamiCircuitView';
+import { useState, useEffect } from "react";
+import DashboardLayout from "./dashboard/DashboardLayout";
+import NoDataMessage from "./dashboard/NoDataMessage";
+import GaugeContainer from "./gauges/GaugeContainer";
+import PitCrewContainer from "./pitcrew/PitCrewContainer";
+import TeamRacingContainer from "./racing/TeamRacingContainer";
+import MonacoCircuitView from "./circuits/MonacoCircuitView";
+import KyalamiCircuitView from "./circuits/KyalamiCircuitView";
 
 export default function MainDashboard({ data }) {
-  const [activeTab, setActiveTab] = useState('total');
+  const [activeTab, setActiveTab] = useState("total");
 
   // Debug logging
   useEffect(() => {
-    console.log('MainDashboard received data:', data);
-    console.log('Active tab:', activeTab);
+    console.log("MainDashboard received data:", data);
+    console.log("Active tab:", activeTab);
   }, [data, activeTab]);
 
   if (!data) {
@@ -26,26 +26,26 @@ export default function MainDashboard({ data }) {
 
   const renderTabContent = () => {
     console.log(`Rendering tab content for: ${activeTab}`);
-    
+
     switch (activeTab) {
-      case 'total':
+      case "total":
         return (
           <>
             <GaugeContainer data={data} />
-            <PitCrewContainer data={data} />
+            {/* <PitCrewContainer data={data} /> */}
           </>
         );
-      case 'team':
+      case "team":
         return <TeamRacingContainer data={data} />;
-      case 'monaco':
+      case "monaco":
         return <MonacoCircuitView data={data} />;
-      case 'kyalami':
+      case "kyalami":
         return <KyalamiCircuitView data={data} />;
       default:
         return (
           <>
             <GaugeContainer data={data} />
-            <PitCrewContainer data={data} />
+            {/* <PitCrewContainer data={data} /> */}
           </>
         );
     }

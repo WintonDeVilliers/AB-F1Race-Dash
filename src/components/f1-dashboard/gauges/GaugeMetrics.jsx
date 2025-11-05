@@ -67,20 +67,7 @@ export default function GaugeMetrics({
         ))}
       </div>
       
-      <div className={styles.summary}>
-        <div className={styles.summaryItem}>
-          <span className={styles.summaryLabel}>Overall Performance</span>
-          <span 
-            className={styles.summaryValue}
-            style={{ 
-              color: averageAchievement >= 100 ? '#22c55e' : 
-                     averageAchievement >= 80 ? '#f59e0b' : '#ef4444'
-            }}
-          >
-            {averageAchievement?.toFixed(1) || '0.0'}%
-          </span>
-        </div>
-      </div>
+   
     </div>
   );
 }

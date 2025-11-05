@@ -1,6 +1,8 @@
 import { useMemo } from 'react';
 import styles from './PitCrewHighlights.module.css';
 
+
+
 export default function PitCrewHighlights({ consultants }) {
   const performanceCategories = useMemo(() => {
     if (!consultants || consultants.length === 0) return [];
@@ -10,7 +12,7 @@ export default function PitCrewHighlights({ consultants }) {
         id: 'podium-pushers',
         name: 'Podium Pushers',
         description: 'Elite Performers (120%+)',
-        icon: '🏎️',
+        icon: '🏆',
         color: '#22c55e',
         backgroundColor: 'rgba(34, 197, 94, 0.1)',
         filter: (c) => (c.salesAchievement || c.achievementRate || 0) >= 120,
@@ -20,7 +22,7 @@ export default function PitCrewHighlights({ consultants }) {
         id: 'pit-masters',
         name: 'Pit Masters', 
         description: 'Target Achievers (100-119%)',
-        icon: '🏎️',
+        icon: '🏁',
         color: '#3b82f6',
         backgroundColor: 'rgba(59, 130, 246, 0.1)',
         filter: (c) => {
@@ -33,7 +35,7 @@ export default function PitCrewHighlights({ consultants }) {
         id: 'pit-stabilizers',
         name: 'Pit Crew Stabilizers',
         description: 'On Track (80-99%)',
-        icon: '🏎️',
+        icon: '🛣️',
         color: '#f59e0b',
         backgroundColor: 'rgba(245, 158, 11, 0.1)',
         filter: (c) => {
@@ -46,7 +48,7 @@ export default function PitCrewHighlights({ consultants }) {
         id: 'boost-needed',
         name: 'Boost Needed',
         description: 'Needs Support (60-79%)',
-        icon: '🏎️',
+        icon: '⛽',
         color: '#f97316',
         backgroundColor: 'rgba(249, 115, 22, 0.1)',
         filter: (c) => {
@@ -59,7 +61,7 @@ export default function PitCrewHighlights({ consultants }) {
         id: 'recovery-mode',
         name: 'Recovery Mode',
         description: 'Critical Support (<60%)',
-        icon: '🏎️',
+        icon: '🛠️',
         color: '#ef4444',
         backgroundColor: 'rgba(239, 68, 68, 0.1)',
         filter: (c) => (c.salesAchievement || c.achievementRate || 0) < 60,
@@ -75,8 +77,8 @@ export default function PitCrewHighlights({ consultants }) {
       
       return {
         ...category,
-        count: members.length,
-        members: members.slice(0, 2), // Show top 2 performers
+        count: members.length / 200 * 100,
+        members: members.slice(0, 6), // Show top 2 performers
         avgPerformance
       };
     });
@@ -109,8 +111,8 @@ export default function PitCrewHighlights({ consultants }) {
             </div>
             
             <div className={styles.countBadge}>
-              <span className={styles.countNumber}>{category.count}</span>
-              <span className={styles.countLabel}>members</span>
+              <span className={styles.countNumber}>{category.count.toFixed(1)} %</span>
+              <span className={styles.countLabel}>OF TOTAL</span>
             </div>
           </div>
 
@@ -149,11 +151,11 @@ export default function PitCrewHighlights({ consultants }) {
                   </div>
                 );
               })}
-              {category.count > 2 && (
+              {/* {category.count > 2 && (
                 <div className={styles.moreMembers}>
                   +{category.count - 2} more
                 </div>
-              )}
+              )} */}
             </div>
           )}
         </div>

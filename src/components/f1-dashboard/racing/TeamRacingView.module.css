@@ -1,298 +1,288 @@
-.container {
-  width: 100%;
+/* Dual Badges - NOW ABOVE THE PROGRESS BAR */
+.dualBadges {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+  padding: 0.25rem 0;
+  position: relative;
+  z-index: 10;
 }
 
-.header {
-  margin-bottom: 1.5rem;
+.performanceBadge {
+  background: rgba(0, 0, 0, 0.9);
+  color: #ffffff;
+  padding: 0.4rem 0.9rem;
+  border-radius: 20px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
 }
 
-.trackInfo {
+.creditCombinedBadge {
+  background-image: linear-gradient(135deg, #3b82f6 0%, #22c55e 100%);
+  color: #ffffff;
+  padding: 0.35rem 0.8rem;
+  border-radius: 18px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Points Summary */
+.pointsSummary {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  border: 1px solid rgba(255, 107, 53, 0.2);
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.circuitName {
-  font-size: 1.3rem;
-  font-weight: 600;
+.totalPoints {
+  font-weight: 700;
   color: #ff6b35;
-  margin: 0;
-  text-transform: uppercase;
+  font-size: 0.8rem;
 }
 
-.liveTiming {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 0.9rem;
-  font-weight: 500;
+.salesAchievement {
+  font-weight: 700;
+  color: #060606;
+  font-size: 0.8rem;
 }
 
-.liveIndicator {
-  color: #22c55e;
-  font-size: 1.2rem;
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
-
-.racingBoard {
+/* Racing Progress Bar Styles - SINGLE BAR VERSION */
+.racingProgressContainer {
+  flex: 2;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  margin-bottom: 1.5rem;
+  margin: 0 1rem;
 }
 
+.trackContainer {
+  position: relative;
+  height: 32px;
+}
+
+.performanceTrack {
+  height: 100%;
+  background: rgba(229, 230, 231, 0.3);
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.trackBackground {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background: rgba(229, 230, 231, 0.1);
+  border-radius: 16px;
+}
+
+.progressFill {
+  height: 100%;
+  position: relative;
+  border-radius: 16px;
+  transition: width 1s ease-out;
+  overflow: hidden;
+}
+
+.progressSegment {
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: all 1s ease-out;
+}
+
+/* Vehicle positioning */
+.vehiclePosition {
+  position: absolute;
+  margin-left: 2.5%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 20;
+  transition: left 1s ease-out;
+}
+
+.vehicleIcon {
+  display: inline-block;
+  font-size: 2.2rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+  animation: raceMotion 3s ease-in-out infinite;
+}
+
+@keyframes raceMotion {
+  0%,
+  100% {
+    transform: translateX(0) scale(1) scaleX(-1);
+  }
+  25% {
+    transform: translateX(2px) scale(1.05) scaleX(-1);
+  }
+  50% {
+    transform: translateX(0) scale(1) scaleX(-1);
+  }
+  75% {
+    transform: translateX(-2px) scale(0.95) scaleX(-1);
+  }
+}
+
+/* Color Legend */
+.colorLegend {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.legendTitle {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #2c2c2c;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.legendItems {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+}
+
+.legendColor {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  display: inline-block;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+}
+
+.legendText {
+  font-weight: 500;
+  color: #4b5563;
+  min-width: 85px;
+  flex-shrink: 0;
+}
+
+.legendValue {
+  color: #6b7280;
+  font-weight: 600;
+  font-size: 0.7rem;
+  flex: 1;
+  text-align: left;
+}
+
+/* Sales Data Styles */
+.salesData {
+  text-align: right;
+  min-width: 140px;
+}
+
+.currentSales {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #2e2d2d;
+  margin-bottom: 0.25rem;
+}
+
+.targetSales {
+  font-size: 0.9rem;
+  color: rgba(0, 0, 0, 0.555);
+}
+
+/* Update driver row for better spacing */
 .driverRow {
   display: flex;
   align-items: center;
   gap: 1rem;
   padding: 1rem;
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px dotted rgba(95, 95, 95, 0.726);
   transition: all 0.3s ease;
   position: relative;
-  overflow: hidden;
-}
-
-.driverRow:hover {
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 100%);
-  border-color: rgba(255, 107, 53, 0.3);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-.positionSection {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  min-width: 80px;
-}
-
-.positionNumber {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #ff6b35;
-  width: 30px;
-  text-align: center;
-}
-
-.carIcon {
-  font-size: 1.5rem;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-}
-
-.vehicleIcon {
-  display: inline-block;
-  animation: raceMotion 3s ease-in-out infinite;
-  transform: scaleX(-1); /* Flip horizontally to face right */
-}
-
-@keyframes raceMotion {
-  0%, 100% { 
-    transform: translateX(0) scale(1); 
-  }
-  25% { 
-    transform: translateX(2px) scale(1.05); 
-  }
-  50% { 
-    transform: translateX(0) scale(1); 
-  }
-  75% { 
-    transform: translateX(-2px) scale(0.95); 
-  }
-}
-
-.driverInfo {
-  flex: 1;
-  min-width: 200px;
-}
-
-.driverName {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #ffffff;
-  margin-bottom: 0.25rem;
-}
-
-.teamInfo {
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.performanceBar {
-  flex: 2;
-  height: 24px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
   overflow: visible;
-  position: relative;
-  margin: 0 1rem;
 }
 
-.vehiclePosition {
-  position: absolute;
-  top: -8px;
-  transform: translateX(-50%);
-  z-index: 10;
-  transition: left 1s ease-out;
+/* CHAMPIONSHIP TABLE STYLES - RESTORED */
+.container {
+  width: 100%;
+  margin-top: 1.5rem;
 }
 
-.progressFill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--fill-color, #ff6b35) 0%, rgba(255, 107, 53, 0.8) 100%);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding-right: 0.5rem;
-  position: relative;
-  transition: width 1s ease-out;
-  min-width: 60px;
-}
-
-.performanceBadge {
-  background: rgba(0, 0, 0, 0.8);
-  color: #ffffff;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.salesData {
-  text-align: right;
-  min-width: 120px;
-}
-
-.currentSales {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #ffffff;
-  margin-bottom: 0.25rem;
-}
-
-.targetSales {
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.finishLine {
-  text-align: center;
-  margin: 2rem 0;
-  padding: 1rem;
-  background: linear-gradient(90deg, rgba(255, 107, 53, 0.1) 0%, rgba(255, 107, 53, 0.2) 50%, rgba(255, 107, 53, 0.1) 100%);
-  border: 2px dashed rgba(255, 107, 53, 0.4);
-  border-radius: 8px;
-}
-
-.finishText {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #ff6b35;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  text-shadow: 0 2px 4px rgba(255, 107, 53, 0.3);
-}
-
-.emptyState {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 300px;
-  gap: 1rem;
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 12px;
-  border: 2px dashed rgba(255, 255, 255, 0.1);
-}
-
-.emptyIcon {
-  font-size: 3rem;
-  opacity: 0.5;
-}
-
-.emptyText {
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 1.1rem;
-}
-
-/* Responsive Design */
-@media (max-width: 1024px) {
-  .driverRow {
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-  
-  .performanceBar {
-    flex: none;
-    width: 100%;
-    margin: 0.5rem 0;
-  }
-  
-  .salesData {
-    min-width: auto;
-    text-align: left;
-  }
-}
-
-/* Championship Table Styles */
 .championshipTable {
-  background: rgba(255, 255, 255, 0.03);
+  width: 100%;
+  background: rgba(255, 255, 255, 0.95);
   border-radius: 12px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .tableHeader {
   display: grid;
-  grid-template-columns: 80px 2fr 120px 100px 120px 120px 120px 80px;
+  grid-template-columns: 80px 2fr 120px 100px 100px 120px 120px 120px;
   gap: 1rem;
   padding: 1rem;
-  background: rgba(255, 107, 53, 0.1);
-  border-bottom: 1px solid rgba(255, 107, 53, 0.2);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.856);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-weight: 600;
 }
 
 .headerCell {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #ff6b35;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  font-weight: 700;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
 }
 
 .tableBody {
-  display: flex;
-  flex-direction: column;
+  background: white;
 }
 
 .tableRow {
   display: grid;
-  grid-template-columns: 80px 2fr 120px 100px 120px 120px 120px 80px;
+  grid-template-columns: 80px 2fr 120px 100px 100px 120px 120px 120px;
   gap: 1rem;
   padding: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.404);
   transition: background-color 0.3s ease;
 }
 
 .tableRow:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background-color: rgba(0, 0, 0, 0.02);
 }
 
 .tableCell {
   display: flex;
   align-items: center;
-  font-size: 0.9rem;
 }
 
 .positionContainer {
@@ -301,93 +291,182 @@
   gap: 0.5rem;
 }
 
+.positionNumber {
+  font-weight: 700;
+  font-size: 1.1rem;
+  min-width: 25px;
+}
+
 .trophy {
   font-size: 1rem;
 }
 
+.driverInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.driverName {
+  font-weight: 600;
+  color: #2c2c2c;
+  font-size: 1rem;
+}
+
+.teamMeta {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
 .circuitBadge {
-  padding: 0.25rem 0.5rem;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
+  font-weight: 600;
   font-size: 0.8rem;
-  font-weight: 500;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.pointsAmount {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #000000;
 }
 
 .achievementRate {
   font-weight: 600;
+  font-size: 0.9rem;
 }
 
-.salesAmount, .targetAmount {
-  color: rgba(255, 255, 255, 0.8);
+.salesAmount {
+  font-weight: 600;
+  color: #2c2c2c;
+  font-size: 1rem;
+}
+
+.targetAmount {
   font-weight: 500;
+  color: #6b7280;
+  font-size: 0.9rem;
 }
 
-.vehicleEmoji {
-  font-size: 1.2rem;
+/* Detailed Breakdown Styles */
+.detailedBreakdown {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.subtitle {
-  color: rgba(255, 255, 255, 0.6);
-  margin-bottom: 1.5rem;
-  text-align: center;
+.breakdownGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
 }
 
-.teamMeta {
+.breakdownItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.6);
-  margin-top: 0.25rem;
+  padding: 0.25rem 0;
 }
 
+.breakdownLabel {
+  font-weight: 600;
+  color: #2c2c2c;
+  min-width: 70px;
+}
+
+.breakdownValue {
+  color: #4b5563;
+  font-weight: 500;
+  flex: 1;
+}
+
+.breakdownPoints {
+  color: #6b7280;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Responsive Design */
 @media (max-width: 1200px) {
-  .tableHeader, .tableRow {
-    grid-template-columns: 60px 2fr 100px 80px 100px 100px 100px 60px;
+  .tableHeader,
+  .tableRow {
+    grid-template-columns: 60px 2fr 100px 80px 80px 100px 100px 100px;
     gap: 0.5rem;
     padding: 0.75rem;
   }
-  
-  .headerCell, .tableCell {
-    font-size: 0.8rem;
+}
+
+@media (max-width: 1024px) {
+  .racingProgressContainer {
+    margin: 0.5rem 0;
+  }
+
+  .legendItems {
+    grid-template-columns: 1fr;
+    gap: 0.3rem;
   }
 }
 
 @media (max-width: 768px) {
-  .trackInfo {
-    flex-direction: column;
+  .dualBadges {
     gap: 0.5rem;
-    text-align: center;
+    margin-bottom: 0.4rem;
   }
-  
-  .driverRow {
-    padding: 0.75rem;
+
+  .performanceBadge {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.7rem;
   }
-  
-  .positionSection {
+
+  .creditCombinedBadge {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.6rem;
+  }
+
+  .vehicleIcon {
+    font-size: 1.8rem;
+  }
+
+  .legendItem {
+    font-size: 0.7rem;
+  }
+
+  .legendText {
+    min-width: 70px;
+  }
+
+  .salesData {
     min-width: auto;
+    text-align: left;
   }
-  
-  .driverInfo {
-    min-width: auto;
-  }
-  
-  .performanceBar {
-    height: 20px;
-  }
-  
-  .championshipTable {
-    overflow-x: auto;
-  }
-  
-  .tableHeader, .tableRow {
-    grid-template-columns: 50px 1.5fr 80px 60px 80px 80px 80px 50px;
+
+  /* Table responsive styles */
+  .tableHeader,
+  .tableRow {
+    grid-template-columns: 50px 1.5fr 80px 60px 60px 80px 80px 80px;
     gap: 0.25rem;
     padding: 0.5rem;
   }
-  
-  .headerCell, .tableCell {
+
+  .driverName {
+    font-size: 0.9rem;
+  }
+
+  .teamMeta {
     font-size: 0.7rem;
   }
-  
-  .teamMeta {
-    display: none;
+
+  .breakdownGrid {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+  }
+
+  .breakdownItem {
+    font-size: 0.75rem;
   }
 }

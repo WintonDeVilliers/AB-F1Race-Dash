@@ -14,9 +14,9 @@ export default function DashboardHeader({ activeTab = 'total', setActiveTab = ()
 
   const tabs = [
     { id: 'total', label: 'Championship Progress', icon: '🏆' },
-    { id: 'team', label: 'Team Racing', icon: '🏎️' },
-    { id: 'monaco', label: 'Circuit de Monaco', icon: '🏁' },
-    { id: 'kyalami', label: 'Kyalami Grand Prix', icon: '🏁' }
+    { id: 'team', label: 'Team Racing', icon: '🏎️' }
+    // { id: 'monaco', label: 'Circuit de Monaco', icon: '🏁' },
+    // { id: 'kyalami', label: 'Kyalami Grand Prix', icon: '🏁' }
   ];
 
   return (
@@ -41,25 +41,7 @@ export default function DashboardHeader({ activeTab = 'total', setActiveTab = ()
           ))}
         </nav>
 
-        <div className={styles.rightSection}>
-          <nav className={styles.quickNav}>
-            <span className={styles.quickNavLink}>
-              👥 Pit Crew Detail (Use main tabs above)
-            </span>
-          </nav>
-          
-          <div className={styles.time}>
-            <div className={styles.timeLabel}>LIVE TIMING</div>
-            <div className={styles.timeValue}>
-              {currentTime.toLocaleTimeString('en-US', { 
-                hour12: false,
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
-              })}
-            </div>
-          </div>
-        </div>
+
       </div>
     </header>
   );

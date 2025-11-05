@@ -4,14 +4,6 @@ import MainDashboard from "./MainDashboard";
 
 /**
  * F1 Racing Dashboard - Main Component for Next.js Integration
- *
- * This component handles Excel file loading and provides the complete
- * F1 Racing Dashboard experience with 5 tabs:
- * - Championship Standings
- * - Team Racing (Monaco/Kyalami)
- * - Monaco Circuit View
- * - Kyalami Circuit View
- * - Pit Crew Details
  */
 export default function F1RacingDashboard({ excelPath = "/Book1.xlsx" }) {
   const [data, setData] = useState(null);
@@ -82,6 +74,7 @@ export default function F1RacingDashboard({ excelPath = "/Book1.xlsx" }) {
       "Salome Baloyi",
       "Shadleigh White",
       "Tshepo Moeketsi",
+      "Zwivhuya Magwara",
     ];
 
     if (monacoSupervisors.includes(supervisorName)) {
@@ -89,7 +82,7 @@ export default function F1RacingDashboard({ excelPath = "/Book1.xlsx" }) {
     } else if (kyalamiSupervisors.includes(supervisorName)) {
       return "Kyalami";
     } else {
-      return supervisorName.charCodeAt(0) % 2 === 0 ? "Monaco" : "Kyalami";
+      return supervisorName?.charCodeAt(0) % 2 === 0 ? "Monaco" : "Kyalami";
     }
   };
 
@@ -98,30 +91,53 @@ export default function F1RacingDashboard({ excelPath = "/Book1.xlsx" }) {
       return { supervisors: [], consultants: [], companyMetrics: {} };
     }
 
-    // Group data by supervisor
+    console.log("=== DEBUG: Data Processing ===");
+    console.log("Total rows in Excel:", rawData.length);
+
+    // Find the total row
+    const totalRow = rawData.find((row) => row["ReportMonth"] === "Total");
+    const excelTotalSalesActual = totalRow
+      ? parseFloat(totalRow["TotalSalesVal"] || 0)
+      : 0;
+    const excelTotalSalesTarget = totalRow
+      ? parseFloat(totalRow["SalesValTarget"] || 0)
+      : 0;
+
+    console.log("Excel Total Row:", {
+      salesActual: excelTotalSalesActual,
+      salesTarget: excelTotalSalesTarget,
+    });
+
+    // Now let's process the data properly for the dashboard
     const supervisorGroups = {};
     const consultantsList = [];
 
     rawData.forEach((row, index) => {
-      const supervisorName =
-        row["Supervisor Name"] || row.SupervisorName || row.supervisor;
-      const consultantName =
-        row["Consultant Name"] || row.ConsultantName || row.consultant;
+      const supervisorName = row["Supervisor Name"];
+      const consultantName = row["Consultant Name"];
 
-      if (!supervisorName || !consultantName) return;
+      // Skip rows without names or total rows
+      if (
+        !supervisorName ||
+        !consultantName ||
+        supervisorName === "Total" ||
+        (supervisorName && supervisorName.includes("Applied filters"))
+      ) {
+        return;
+      }
 
-      const salesActual = parseFloat(
-        row["TotalSalesVal"] || row.TotalSalesVal || 0
-      );
-      const salesTarget = parseFloat(
-        row["SalesValTarget"] || row.SalesValTarget || 0
-      );
-      const appsActual = parseInt(
-        row["TotalRealAppsVol"] || row.TotalRealAppsVol || 0
-      );
-      const appsTarget = parseInt(
-        row["RealAppsTarget"] || row.RealAppsTarget || 0
-      );
+      const salesActual = parseFloat(row["TotalSalesVal"] || 0);
+      const salesTarget = parseFloat(row["SalesValTarget"] || 0);
+      const appsActual = parseInt(row["TotalRealAppsVol"] || 0);
+      const appsTarget = parseInt(row["RealAppsTarget"] || 0);
+
+      // NEW: Extract the deal volumes for points system
+      const loanDealsVol = parseInt(row["LoanDealsVol"] || 0);
+      const cardDealsVol = parseInt(row["CardDealsVol"] || 0);
+
+      if (isNaN(salesActual) || isNaN(salesTarget)) {
+        return;
+      }
 
       const salesAchievement =
         salesTarget > 0 ? (salesActual / salesTarget) * 100 : 0;
@@ -141,14 +157,16 @@ export default function F1RacingDashboard({ excelPath = "/Book1.xlsx" }) {
 
       const consultant = {
         id: index + 1,
-        consultantName,
-        supervisorName,
+        consultantName: consultantName.trim(),
+        supervisorName: supervisorName.trim(),
         salesAchievement,
         appsAchievement,
         salesActual,
         salesTarget,
         appsActual,
         appsTarget,
+        loanDealsVol, // NEW: Add loan deals volume
+        cardDealsVol, // NEW: Add card deals volume
         circuit,
         performanceLevel,
         overallPerformance,
@@ -165,6 +183,8 @@ export default function F1RacingDashboard({ excelPath = "/Book1.xlsx" }) {
           totalSalesTarget: 0,
           totalAppsActual: 0,
           totalAppsTarget: 0,
+          totalLoanDealsVol: 0, // NEW: Add loan deals aggregation
+          totalCardDealsVol: 0, // NEW: Add card deals aggregation
         };
       }
 
@@ -173,6 +193,8 @@ export default function F1RacingDashboard({ excelPath = "/Book1.xlsx" }) {
       supervisorGroups[supervisorName].totalSalesTarget += salesTarget;
       supervisorGroups[supervisorName].totalAppsActual += appsActual;
       supervisorGroups[supervisorName].totalAppsTarget += appsTarget;
+      supervisorGroups[supervisorName].totalLoanDealsVol += loanDealsVol; // NEW: Aggregate loan deals
+      supervisorGroups[supervisorName].totalCardDealsVol += cardDealsVol; // NEW: Aggregate card deals
     });
 
     // Convert to supervisors array with calculated metrics
@@ -192,46 +214,44 @@ export default function F1RacingDashboard({ excelPath = "/Book1.xlsx" }) {
         appsAchievement,
         overallAchievement: (salesAchievement + appsAchievement) / 2,
         teamSize: group.consultants.length,
+        // Include the aggregated deal volumes for points system
+        loanDealsVol: group.totalLoanDealsVol,
+        cardDealsVol: group.totalCardDealsVol,
       };
     });
 
-    // Calculate company metrics
-    const totalSalesActual = consultantsList.reduce(
-      (sum, c) => sum + c.salesActual,
-      0
-    );
-    const totalSalesTarget = consultantsList.reduce(
-      (sum, c) => sum + c.salesTarget,
-      0
-    );
-    const totalAppsActual = consultantsList.reduce(
-      (sum, c) => sum + c.appsActual,
-      0
-    );
-    const totalAppsTarget = consultantsList.reduce(
-      (sum, c) => sum + c.appsTarget,
-      0
-    );
-
+    // Use the Excel totals for company metrics since they're authoritative
     const companyMetrics = {
+      totalSalesActual: excelTotalSalesActual,
+      totalSalesTarget: excelTotalSalesTarget,
+      totalAppsActual: totalRow
+        ? parseInt(totalRow["TotalRealAppsVol"] || 0)
+        : 0,
+      totalAppsTarget: totalRow ? parseInt(totalRow["RealAppsTarget"] || 0) : 0,
       totalConsultants: consultantsList.length,
       totalSupervisors: supervisors.length,
-      totalSalesActual,
-      totalSalesTarget,
-      totalAppsActual,
-      totalAppsTarget,
-      salesAchievement:
-        totalSalesTarget > 0 ? (totalSalesActual / totalSalesTarget) * 100 : 0,
-      appsAchievement:
-        totalAppsTarget > 0 ? (totalAppsActual / totalAppsTarget) * 100 : 0,
-      achievementPercentage:
-        totalSalesTarget > 0 ? (totalSalesActual / totalSalesTarget) * 100 : 0,
-      currentValue: totalSalesActual,
-      targetValue: totalSalesTarget,
     };
 
+    // Calculate percentages
+    companyMetrics.salesAchievement =
+      companyMetrics.totalSalesTarget > 0
+        ? (companyMetrics.totalSalesActual / companyMetrics.totalSalesTarget) *
+          100
+        : 0;
+    companyMetrics.appsAchievement =
+      companyMetrics.totalAppsTarget > 0
+        ? (companyMetrics.totalAppsActual / companyMetrics.totalAppsTarget) *
+          100
+        : 0;
     companyMetrics.overallAchievement =
       (companyMetrics.salesAchievement + companyMetrics.appsAchievement) / 2;
+
+    console.log("=== FINAL SUPERVISORS DATA ===");
+    supervisors.forEach((sup) => {
+      console.log(
+        `${sup.supervisorName}: Loans=${sup.loanDealsVol}, Cards=${sup.cardDealsVol}`
+      );
+    });
 
     return {
       supervisors,

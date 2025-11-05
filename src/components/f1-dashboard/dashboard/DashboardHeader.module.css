@@ -37,7 +37,8 @@
 
 .title {
   color: #ffffff;
-  font-size: 1.25rem;
+  font-size: 1.25rem "Formula1";
+  /* font: 500 2rem/2.375rem "Formula1", sans-serif; */
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
