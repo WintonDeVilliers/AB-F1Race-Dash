@@ -1,90 +1,74 @@
-import React from 'react';
-import styles from './PointsChest.module.css';
+import React from "react";
+import styles from "./PointsChest.module.css";
+// import localFont from "@next/font/local";
+// import localFont from "next/font/local";
 
 export default function PointsChestView() {
+  // const BungeeShadeRegular = localFont({
+  //   src: "/public/fonts/BungeeShade-Regular.ttf",
+  //   variable: "--font-BungeeShade-Regular",
+  // });
+
+  // const poppins = localFont({
+  //   src: "../public/fonts/Poppins-Regular.woff2",
+  //   variable: "--font-poppins",
+  // });
+
+  // const roboto = localFont({
+  //   src: "../public/fonts/Roboto-Regular.woff2",
+  //   variable: "--font-roboto",
+  // });
+
   const chestData = [
-    { title: "Credit Loans", points: 500 },
-    { title: "Credit Card", points: 350 },
-    { title: "MyWorld", points: 800 },
-    { title: "Funeral Cover", points: 250 },
-    { title: "Investments", points: 600 }
+    {
+      title: "Credit",
+      points: 500,
+      pointsAvailable: 4500,
+      image: "/credit-chest.png",
+    },
+    {
+      title: "MyWorld",
+      points: 800,
+      pointsAvailable: 4500,
+      image: "/treasure-chest.png",
+    },
+    {
+      title: "Funeral",
+      points: 250,
+      pointsAvailable: 4500,
+      image: "/funeral-chest.png",
+    },
+    {
+      title: "Investments",
+      points: 600,
+      pointsAvailable: 4500,
+      image: "/investment-chest.png",
+    },
   ];
 
   return (
     <div className={styles.container}>
       {chestData.map((item, index) => (
         <div key={index} className={styles.gridItem}>
-          <h2 className={styles.itemTitle}>{item.title}</h2>
-          
+          {/* <h2 className={styles.itemTitle}>{item.title}</h2> */}
+          <h2 className={`${styles.itemTitle} ${styles.FastOne}`}>
+            {item.title}
+          </h2>
+          <h3 className={styles.p_available}>
+            {item.pointsAvailable} Available
+          </h3>
+
           <div className={styles.chestWrapper}>
             <div className={styles.chestIcon}>
-              <img 
-                src="/treasure-chest.png" 
-                alt="Treasure Chest" 
+              <img
+                src={item.image}
+                alt={`${item.title} Chest`}
                 className={styles.chestImage}
               />
             </div>
-            
-            {/* Animated Coins 
-            <div
-              className={`${styles.coin} ${styles.coinAnimated}`}
-              style={{
-                '--coin-to-x': 'calc(-100px + 32px)',
-                '--coin-to-y': 'calc(-105px + 32px)',
-                '--coin-delay': '0.3s'
-              }}
-            ></div> 
-            {/* <div
-              className={`${styles.coin} ${styles.coinAnimated}`}
-              style={{
-                '--coin-to-x': 'calc(-70px + 32px)',
-                '--coin-to-y': '-90px',
-                '--coin-delay': '0.1s'
-              }}
-            ></div>
-            <div
-              className={`${styles.coin} ${styles.coinAnimated}`}
-              style={{
-                '--coin-to-x': 'calc(-30px + 32px)',
-                '--coin-to-y': '-125px',
-                '--coin-delay': '0s'
-              }}
-            ></div> 
-            {/* <div
-              className={`${styles.coin} ${styles.coinAnimated}`}
-              style={{
-                '--coin-to-x': 'calc(10px + 32px)',
-                '--coin-to-y': '-130px',
-                '--coin-delay': '0.2s'
-              }}
-            ></div>
-            <div
-              className={`${styles.coin} ${styles.coinAnimated}`}
-              style={{
-                '--coin-to-x': 'calc(30px + 32px)',
-                '--coin-to-y': '-100px',
-                '--coin-delay': '0.1s'
-              }}
-            ></div>
-            <div
-              className={`${styles.coin} ${styles.coinAnimated}`}
-              style={{
-                '--coin-to-x': 'calc(70px + 32px)',
-                '--coin-to-y': '-95px',
-                '--coin-delay': '0.4s'
-              }}
-            ></div> 
-            {/* <div
-              className={`${styles.coin} ${styles.coinAnimated}`}
-              style={{
-                '--coin-to-x': 'calc(100px + 32px)',
-                '--coin-to-y': '-100px',
-                '--coin-delay': '0.2s'
-              }}
-            ></div> */}
           </div>
-          
-          <div className={styles.pointsDisplay}>{item.points} Points</div>
+
+          <div className={styles.pointsDisplay}>{item.points} Redeemed</div>
         </div>
       ))}
     </div>

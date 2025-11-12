@@ -23,7 +23,7 @@ export default function GaugeContainer({ data }) {
   // Prepare data for 4 gauges
   const gaugeData = [
     {
-      title: "Loans & Credit Card",
+      title: "Credit",
       currentValue:
         companyMetrics.totalSalesActual || companyMetrics.currentValue || 0,
       targetValue:
@@ -36,7 +36,7 @@ export default function GaugeContainer({ data }) {
         0,
     },
     {
-      title: "Funeral Cover",
+      title: "Funeral",
       currentValue: companyMetrics.totalAppsActual || 0,
       targetValue: companyMetrics.totalAppsTarget || 0,
       averageAchievement: companyMetrics.appsAchievement || 0,
@@ -57,30 +57,30 @@ export default function GaugeContainer({ data }) {
 
   return (
     <>
-       <div className={styles.container}>
-      <div className={styles.header}>
-        <h3 className={styles.title}>SALES CHAMPIONSHIP PROGRESS</h3>
-        {/* <p className={styles.subtitle}>
+      <h2 className={styles.title}>PERFORMANCE TARGET OVERVIEW</h2>
+      <div className={styles.container}>
+        <div className={styles.header}>
+          {/* <p className={styles.subtitle}>
           Real Applications Performance Dashboard
         </p> */}
-      </div>
+        </div>
 
-      {/* Always use 2x2 grid, but adjust sizing based on screen size */}
-      <div className={styles.gaugesGrid}>
-        {gaugeData.map((gauge, index) => (
-          <div key={index} className={styles.gaugeItem}>
-            <GaugeDisplay
-              title={gauge.title}
-              currentValue={gauge.currentValue}
-              targetValue={gauge.targetValue}
-              averageAchievement={gauge.averageAchievement}
-            />
-          </div>
-        ))}
-      </div>
+        {/* Always use 2x2 grid, but adjust sizing based on screen size */}
+        <div className={styles.gaugesGrid}>
+          {gaugeData.map((gauge, index) => (
+            <div key={index} className={styles.gaugeItem}>
+              <GaugeDisplay
+                title={gauge.title}
+                currentValue={gauge.currentValue}
+                targetValue={gauge.targetValue}
+                averageAchievement={gauge.averageAchievement}
+              />
+            </div>
+          ))}
+        </div>
 
-      {/* Uncomment if you still need the metrics section */}
-      {/* <GaugeMetrics 
+        {/* Uncomment if you still need the metrics section */}
+        {/* <GaugeMetrics 
         totalConsultants={companyMetrics.totalConsultants}
         totalSupervisors={companyMetrics.totalSupervisors}
         totalRealApps={companyMetrics.totalAppsActual}
@@ -89,18 +89,12 @@ export default function GaugeContainer({ data }) {
         totalSalesTarget={companyMetrics.totalSalesTarget || companyMetrics.targetValue || 240000000}
         averageAchievement={companyMetrics.salesAchievement || companyMetrics.overallAchievement || 0}
       /> */}
-    </div>
+      </div>
 
-
-
-    <div className={styles.container}>
-
-      <PointsChestView/>
-
-    </div>
+      <h3 className={styles.title}> Points REDEEMED Overview</h3>
+      <div className={styles.container}>
+        <PointsChestView />
+      </div>
     </>
- 
-
-  
   );
 }

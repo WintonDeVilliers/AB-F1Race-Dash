@@ -1,12 +1,41 @@
+@font-face {
+  font-family: "BungeeShade-Regular";
+  src: url("/fonts/BungeeShade-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "FastOne";
+  src: url("/fonts/FasterOne.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+.BungeeShade_Regular {
+  font-family: "BungeeShade-Regular", sans-serif;
+}
+
+.FastOne {
+  font-family: "FastOne", sans-serif;
+}
+/* .poppins {
+  font-family: var(--font-poppins), sans-serif;
+}
+
+.roboto {
+  font-family: var(--font-roboto), sans-serif;
+} */
+
 /* Grid Layout */
 .container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3, 200px);
-  gap: 20px;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  /* gap: 20px; */
   width: 100%;
-  margin: 50px auto;
-  padding: 20px;
+  /* margin: 50px 0; */
+  /* padding-right: 200px; */
 }
 
 .container .gridItem:nth-child(1) {
@@ -15,50 +44,84 @@
 }
 
 .container .gridItem:nth-child(2) {
-  grid-column: 1;
-  grid-row: 3;
+  grid-column: 2;
+  grid-row: 1;
 }
-
+/* 
 .container .gridItem:nth-child(3) {
   grid-column: 2;
-  grid-row: 2;
-}
-
-.container .gridItem:nth-child(4) {
-  grid-column: 3;
   grid-row: 1;
 }
 
-.container .gridItem:nth-child(5) {
+.container .gridItem:nth-child(4) {
+  grid-column: 2;
+  grid-row: 2;
+} */
+
+/* .container .gridItem:nth-child(5) {
   grid-column: 3;
   grid-row: 3;
-}
+} */
 
 .gridItem {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 15px;
+  /* gap: 15px; */
 }
 
 .itemTitle {
-  /* font-size: 1.1rem; */
+  font-size: 2.5rem;
   /* font-weight: 600; */
   color: #333;
-  margin: 0;
+  margin-bottom: -6%;
   text-align: center;
 }
 
+.p_available {
+  font-size: 2.3rem;
+  /* font-weight: 500; */
+  color: #2288f6c3;
+  z-index: 10;
+  /* font-family: "Roboto", sans-serif; */
+
+  /* margin: 0; */
+  margin-bottom: -5%;
+  text-align: center;
+  text-shadow: -1px -1px 0 #e1e1e1b7, 1px -1px 0 #181818b7, -1px 1px 0 #181818b7,
+    1px 1px 0 #181818b7, -2px 0px 0 #e1e1e1b7, 2px 0px 0 #e1e1e1b7,
+    0px -2px 0 #e1e1e1b7;
+}
+
 .pointsDisplay {
-  font-size: 1rem;
+  /* font-family: "Roboto", sans-serif; */
+  font-size: 2.5rem;
   font-weight: 600;
-  color: #8b5a2b;
-  margin-top: 10px;
+  color: #c29250;
+  margin-top: -5%;
+  z-index: 1;
+  /* text-decoration: overline; */
+  text-decoration-color: #9d6b2478;
+  /* text-decoration-thickness: 2px; */
+  /* text-shadow: 1px 2px 4px rgba(0, 0, 0, 1); */
+  /* text-shadow: h-shadow v-shadow blur-radius color; */
+  /*   
+  text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000,
+    2px 2px 0 #000, -3px 0px 0 #000, 3px 0px 0 #000, 0px -3px 0 #000,
+    0px 3px 0 #000; */
+
+  /* text-shadow: -1px -1px 0 #181818b7, 1px -1px 0 #181818b7, -1px 1px 0 #181818b7,
+    1px 1px 0 #181818b7, -2px 0px 0 #181818b7, 2px 0px 0 #181818b7,
+    0px -2px 0 #181818b7; */
+
+  text-shadow: -1px -1px 0 #e1e1e1b7, 1px -1px 0 #181818b7, -1px 1px 0 #181818b7,
+    1px 1px 0 #181818b7, -2px 0px 0 #e1e1e1b7, 2px 0px 0 #e1e1e1b7,
+    0px -2px 0 #e1e1e1b7;
 }
 
 /* Mobile layout */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .container {
     display: flex;
     flex-direction: column;
@@ -69,12 +132,12 @@
   .gridItem {
     width: 90%;
   }
-}
+} */
 
 /* Chest with Coin Animation */
 .chestWrapper {
-  width: 420px;
-  height: 320px;
+  width: 520px;
+  /* height: 420px; */
   position: relative;
   display: flex;
   align-items: center;
@@ -82,19 +145,19 @@
 }
 
 .chestIcon {
-  width: 330px;
-  height: 100px;
+  /* width: 330px;
+  height: 100px; */
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  z-index: 101;
+  z-index: 1;
 }
 
 .chestImage {
   width: 100%;
-  height: 100%;
-  object-fit:contain;
+  /* height: 250px; */
+  object-fit: contain;
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
 }
 
@@ -164,6 +227,7 @@
     opacity: 1;
   }
   to {
-    transform: translateY(calc(var(--coin-to-y) * 1.5)) rotate3d(1, 1, 1, 1080deg);
+    transform: translateY(calc(var(--coin-to-y) * 1.5))
+      rotate3d(1, 1, 1, 1080deg);
   }
 }
