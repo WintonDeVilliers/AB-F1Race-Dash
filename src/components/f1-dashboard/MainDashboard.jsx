@@ -2,10 +2,11 @@ import { useState, useEffect } from "react";
 import DashboardLayout from "./dashboard/DashboardLayout";
 import NoDataMessage from "./dashboard/NoDataMessage";
 import GaugeContainer from "./gauges/GaugeContainer";
-import PitCrewContainer from "./pitcrew/PitCrewContainer";
+import PitCrewPage from "./PitCrewPage";
 import TeamRacingContainer from "./racing/TeamRacingContainer";
 import MonacoCircuitView from "./circuits/MonacoCircuitView";
 import KyalamiCircuitView from "./circuits/KyalamiCircuitView";
+import PitCrewHighlights from "./pitcrew/PitCrewHighlights";
 
 export default function MainDashboard({ data }) {
   const [activeTab, setActiveTab] = useState("total");
@@ -37,6 +38,13 @@ export default function MainDashboard({ data }) {
         );
       case "team":
         return <TeamRacingContainer data={data} />;
+      case "pitcrew":
+        return (
+          <>
+            <PitCrewPage data={data} />
+            <PitCrewHighlights consultants={data.consultants} />
+          </>
+        );
       case "monaco":
         return <MonacoCircuitView data={data} />;
       case "kyalami":

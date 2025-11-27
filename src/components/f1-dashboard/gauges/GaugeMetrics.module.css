@@ -81,7 +81,7 @@
   .grid {
     grid-template-columns: 1fr;
   }
-  
+
   .summaryItem {
     flex-direction: column;
     gap: 0.5rem;

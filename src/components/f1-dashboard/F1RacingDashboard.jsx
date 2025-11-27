@@ -1,16 +1,12 @@
+// --- FINAL FIXED F1RacingDashboard.jsx ---
 import React, { useState, useEffect } from "react";
 import * as XLSX from "xlsx";
 import MainDashboard from "./MainDashboard";
 
-/**
- * F1 Racing Dashboard - Main Component for Next.js Integration
- * 
- * 
- * We add a new function for excelProcessing -- loadPointsChestData = async () => {}
- * 
- * 
- */
-export default function F1RacingDashboard({ excelPath = "/Book1.xlsx" }) {
+export default function F1RacingDashboard({
+  salesReportPath = "/Book1.xlsx",
+  pointsReportPath = "/PointsReport.xlsx",
+}) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -20,31 +16,38 @@ export default function F1RacingDashboard({ excelPath = "/Book1.xlsx" }) {
       try {
         setLoading(true);
 
-        // Fetch Excel file from public folder
-        const response = await fetch(excelPath);
-        if (!response.ok) {
-          throw new Error(`Failed to fetch Excel file: ${response.status}`);
-        }
+        const salesRes = await fetch(salesReportPath);
+        const pointsRes = await fetch(pointsReportPath);
 
-        const arrayBuffer = await response.arrayBuffer();
-        const workbook = XLSX.read(arrayBuffer, { type: "array" });
+        if (!salesRes.ok) throw new Error(`Failed to fetch sales report`);
+        if (!pointsRes.ok) throw new Error(`Failed to fetch points report`);
 
-        // Get first sheet
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
-        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+        const arrayBuffer_salesReport = await salesRes.arrayBuffer();
+        const arrayBuffer_pointsReport = await pointsRes.arrayBuffer();
 
-        // Process data into F1 dashboard format
-        console.log("Raw Excel data loaded:", jsonData?.length, "rows");
-        console.log("Sample row:", jsonData?.[0]);
+        const workbook_salesReport = XLSX.read(arrayBuffer_salesReport, {
+          type: "array",
+        });
+        const workbook_pointsReport = XLSX.read(arrayBuffer_pointsReport, {
+          type: "array",
+        });
 
-        const processedData = processExcelData(jsonData);
-        console.log("Processed data:", processedData);
+        const ws_sales =
+          workbook_salesReport.Sheets[workbook_salesReport.SheetNames[0]];
+        const ws_points =
+          workbook_pointsReport.Sheets[workbook_pointsReport.SheetNames[0]];
 
+        const jsonData_Sales = XLSX.utils.sheet_to_json(ws_sales, {
+          raw: false,
+        });
+        const jsonData_Points = XLSX.utils.sheet_to_json(ws_points, {
+          raw: false,
+        });
+
+        const processedData = processExcelData(jsonData_Sales, jsonData_Points);
         setData(processedData);
-        setError(null);
       } catch (err) {
-        console.error("Error loading Excel data:", err);
+        console.error("Dashboard Error:", err);
         setError(err.message);
       } finally {
         setLoading(false);
@@ -52,11 +55,17 @@ export default function F1RacingDashboard({ excelPath = "/Book1.xlsx" }) {
     };
 
     loadExcelData();
-  }, [excelPath]);
+  }, [salesReportPath, pointsReportPath]);
 
+  const parseNumber = (v) => {
+    if (!v && v !== 0) return 0;
+    const cleaned = String(v).replace(/[^\d.-]/g, "");
+    return isNaN(parseFloat(cleaned)) ? 0 : parseFloat(cleaned);
+  };
+
+  // NEW CIRCUIT MAPPING
   const getCircuitAssignment = (supervisorName) => {
-    // Monaco circuit supervisors
-    const monacoSupervisors = [
+    const monaco = [
       "Ashley Moyo",
       "Mixo Makhubele",
       "Nonhle Zondi",
@@ -68,8 +77,7 @@ export default function F1RacingDashboard({ excelPath = "/Book1.xlsx" }) {
       "Thobile Phakhathi",
     ];
 
-    // Kyalami circuit supervisors
-    const kyalamiSupervisors = [
+    const kyalami = [
       "Busisiwe Mabuza",
       "Cindy Visser",
       "Matimba Ngobeni",
@@ -82,99 +90,98 @@ export default function F1RacingDashboard({ excelPath = "/Book1.xlsx" }) {
       "Zwivhuya Magwara",
     ];
 
-    if (monacoSupervisors.includes(supervisorName)) {
-      return "Monaco";
-    } else if (kyalamiSupervisors.includes(supervisorName)) {
-      return "Kyalami";
-    } else {
-      return supervisorName?.charCodeAt(0) % 2 === 0 ? "Monaco" : "Kyalami";
-    }
+    const vegas = ["Lucky Seshabela", "Mfundo Thamane", "Ndodenhle Dlamini"];
+
+    if (vegas.includes(supervisorName)) return "Las Vegas";
+    if (monaco.includes(supervisorName)) return "Monaco";
+    if (kyalami.includes(supervisorName)) return "Kyalami";
+
+    return supervisorName?.charCodeAt(0) % 2 === 0 ? "Monaco" : "Kyalami";
   };
 
-  const processExcelData = (rawData) => {
-    if (!rawData || rawData.length === 0) {
+  const processExcelData = (salesData, pointsData) => {
+    if (!salesData || salesData.length === 0) {
       return { supervisors: [], consultants: [], companyMetrics: {} };
     }
 
-    console.log("=== DEBUG: Data Processing ===");
-    console.log("Total rows in Excel:", rawData.length);
+    // Build points lookup
+    const pointsBySupervisor = {};
+    pointsData.forEach((row) => {
+      const name = row["Supervisor Name"];
+      if (!name) return;
 
-    // Find the total row
-    const totalRow = rawData.find((row) => row["ReportMonth"] === "Total");
-    const excelTotalSalesActual = totalRow
-      ? parseFloat(totalRow["TotalSalesVal"] || 0)
-      : 0;
-    const excelTotalSalesTarget = totalRow
-      ? parseFloat(totalRow["SalesValTarget"] || 0)
-      : 0;
-
-    console.log("Excel Total Row:", {
-      salesActual: excelTotalSalesActual,
-      salesTarget: excelTotalSalesTarget,
+      pointsBySupervisor[name.trim()] = {
+        creditPoints: parseNumber(row["Credit Points"]),
+        myWorldPoints: parseNumber(row["MyWorld Points"]),
+        funeralPoints: parseNumber(row["Funeral Points"]),
+        investmentPoints: parseNumber(row["Investment Points"]),
+        totalPoints: parseNumber(row["Total Points"]),
+      };
     });
 
-    // Now let's process the data properly for the dashboard
     const supervisorGroups = {};
     const consultantsList = [];
 
-    rawData.forEach((row, index) => {
-      const supervisorName = row["Supervisor Name"];
+    // ---------------------------
+    // PROCESS SALES DATA ROWS
+    // ---------------------------
+    salesData.forEach((row, index) => {
+      const supervisorName = (row["Supervisor Name"] || "").trim();
       const consultantName = row["Consultant Name"];
 
-      // Skip rows without names or total rows
-      if (
-        !supervisorName ||
-        !consultantName ||
-        supervisorName === "Total" ||
-        (supervisorName && supervisorName.includes("Applied filters"))
-      ) {
-        return;
-      }
+      if (!supervisorName || !consultantName) return;
+      if (supervisorName.toLowerCase() === "total") return;
 
-      const salesActual = parseFloat(row["TotalSalesVal"] || 0);
-      const salesTarget = parseFloat(row["SalesValTarget"] || 0);
-      const appsActual = parseInt(row["TotalRealAppsVol"] || 0);
-      const appsTarget = parseInt(row["RealAppsTarget"] || 0);
+      const salesActual = parseNumber(row["TotalSalesVal"]);
+      const salesTarget = parseNumber(row["SalesValTarget"]);
 
-      // NEW: Extract the deal volumes for points system
-      const loanDealsVol = parseInt(row["LoanDealsVol"] || 0);
-      const cardDealsVol = parseInt(row["CardDealsVol"] || 0);
+      const appsActual = parseNumber(row["TotalRealAppsVol"]);
+      const appsTarget = parseNumber(row["RealAppsTarget"]);
 
-      if (isNaN(salesActual) || isNaN(salesTarget)) {
-        return;
-      }
+      const myWorldTarget = parseNumber(row["MyWorldTarget"]);
+      const myWorldFundedVol = parseNumber(row["MyWorldFundedAccs"]);
+
+      const funeralTarget = parseNumber(row["FuneralTarget"]);
+      const funeralVol = parseNumber(row["FuneralVol"]);
+
+      const investSales = parseNumber(row["InvestSalesValue"]);
+      const investTarget = parseNumber(row["InvestTarget"]);
+      const investApps = parseNumber(row["InvestApplicationVolume"]);
 
       const salesAchievement =
         salesTarget > 0 ? (salesActual / salesTarget) * 100 : 0;
       const appsAchievement =
         appsTarget > 0 ? (appsActual / appsTarget) * 100 : 0;
-      const overallPerformance = (salesAchievement + appsAchievement) / 2;
 
-      // Determine performance level
-      let performanceLevel = "Recovery Mode";
-      if (overallPerformance >= 100) performanceLevel = "Superstar";
-      else if (overallPerformance >= 90) performanceLevel = "Target Achieved";
-      else if (overallPerformance >= 70) performanceLevel = "On Track";
-      else if (overallPerformance >= 50) performanceLevel = "Needs Boost";
-
-      // Determine circuit assignment
       const circuit = getCircuitAssignment(supervisorName);
+
+      const supervisorPoints = pointsBySupervisor[supervisorName] || {
+        creditPoints: 0,
+        myWorldPoints: 0,
+        funeralPoints: 0,
+        investmentPoints: 0,
+        totalPoints: 0,
+      };
 
       const consultant = {
         id: index + 1,
-        consultantName: consultantName.trim(),
-        supervisorName: supervisorName.trim(),
-        salesAchievement,
-        appsAchievement,
+        consultantName,
+        supervisorName,
+        circuit,
         salesActual,
         salesTarget,
         appsActual,
         appsTarget,
-        loanDealsVol, // NEW: Add loan deals volume
-        cardDealsVol, // NEW: Add card deals volume
-        circuit,
-        performanceLevel,
-        overallPerformance,
+        salesAchievement,
+        appsAchievement,
+        myWorldTarget,
+        myWorldFundedVol,
+        funeralTarget,
+        funeralVol,
+        investSales,
+        investTarget,
+        investApps,
+        points: supervisorPoints,
       };
 
       consultantsList.push(consultant);
@@ -184,122 +191,144 @@ export default function F1RacingDashboard({ excelPath = "/Book1.xlsx" }) {
           supervisorName,
           circuit,
           consultants: [],
+          salesActual: 0,
+          salesTarget: 0,
+          appsActual: 0,
+          appsTarget: 0,
+          myWorldTarget: 0,
+          myWorldFundedVol: 0,
+          funeralTarget: 0,
+          funeralVol: 0,
+          investSales: 0,
+          investTarget: 0,
+          investApps: 0,
+          points: supervisorPoints,
+        };
+      }
+
+      const g = supervisorGroups[supervisorName];
+      g.salesActual += salesActual;
+      g.salesTarget += salesTarget;
+
+      g.appsActual += appsActual;
+      g.appsTarget += appsTarget;
+
+      g.myWorldTarget += myWorldTarget;
+      g.myWorldFundedVol += myWorldFundedVol;
+
+      g.funeralTarget += funeralTarget;
+      g.funeralVol += funeralVol;
+
+      g.investSales += investSales;
+      g.investTarget += investTarget;
+      g.investApps += investApps;
+
+      g.consultants.push(consultant);
+    });
+
+    const supervisors = Object.values(supervisorGroups).map((g) => ({
+      ...g,
+      salesAchievement:
+        g.salesTarget > 0 ? (g.salesActual / g.salesTarget) * 100 : 0,
+      appsAchievement:
+        g.appsTarget > 0 ? (g.appsActual / g.appsTarget) * 100 : 0,
+      myWorldAchievement:
+        g.myWorldTarget > 0 ? (g.myWorldFundedVol / g.myWorldTarget) * 100 : 0,
+      funeralAchievement:
+        g.funeralTarget > 0 ? (g.funeralVol / g.funeralTarget) * 100 : 0,
+      investAchievement:
+        g.investTarget > 0 ? (g.investSales / g.investTarget) * 100 : 0,
+      teamSize: g.consultants.length,
+    }));
+
+    // ---------------------------------
+    // CONSULTANTS INHERIT REAL CIRCUIT
+    // ---------------------------------
+    const supByName = {};
+    supervisors.forEach((s) => {
+      supByName[(s.supervisorName || "").trim().toLowerCase()] = s;
+    });
+
+    const consultantsWithCircuit = consultantsList.map((c) => {
+      const sup = supByName[(c.supervisorName || "").trim().toLowerCase()];
+      return {
+        ...c,
+        circuit: sup ? sup.circuit : getCircuitAssignment(c.supervisorName),
+      };
+    });
+
+    // ----------------------------
+    // COMPANY METRICS (SAFE)
+    // ----------------------------
+    const totalRow = salesData.find(
+      (r) => String(r["ReportMonth"]).trim().toLowerCase() === "total"
+    );
+
+    let companyMetrics = null;
+
+    if (totalRow) {
+      companyMetrics = {
+        totalSalesActual: parseNumber(totalRow["TotalSalesVal"]),
+        totalSalesTarget: parseNumber(totalRow["SalesValTarget"]),
+        totalAppsActual: parseNumber(totalRow["TotalRealAppsVol"]),
+        totalAppsTarget: parseNumber(totalRow["RealAppsTarget"]),
+        totalMyWorldTarget: parseNumber(totalRow["MyWorldTarget"]),
+        totalMyWorldFundedVol: parseNumber(totalRow["MyWorldFundedAccs"]),
+        totalFuneralTarget: parseNumber(totalRow["FuneralTarget"]),
+        totalFuneralVol: parseNumber(totalRow["FuneralVol"]),
+        totalInvestSales: parseNumber(totalRow["InvestSalesValue"]),
+        totalInvestTarget: parseNumber(totalRow["InvestTarget"]),
+        totalInvestApps: parseNumber(totalRow["InvestApplicationVolume"]),
+      };
+    } else {
+      companyMetrics = supervisors.reduce(
+        (acc, s) => {
+          acc.totalSalesActual += s.salesActual || 0;
+          acc.totalSalesTarget += s.salesTarget || 0;
+          acc.totalAppsActual += s.appsActual || 0;
+          acc.totalAppsTarget += s.appsTarget || 0;
+          acc.totalMyWorldTarget += s.myWorldTarget || 0;
+          acc.totalMyWorldFundedVol += s.myWorldFundedVol || 0;
+          acc.totalFuneralTarget += s.funeralTarget || 0;
+          acc.totalFuneralVol += s.funeralVol || 0;
+          acc.totalInvestSales += s.investSales || 0;
+          acc.totalInvestTarget += s.investTarget || 0;
+          acc.totalInvestApps += s.investApps || 0;
+
+          return acc;
+        },
+        {
           totalSalesActual: 0,
           totalSalesTarget: 0,
           totalAppsActual: 0,
           totalAppsTarget: 0,
-          totalLoanDealsVol: 0, // NEW: Add loan deals aggregation
-          totalCardDealsVol: 0, // NEW: Add card deals aggregation
-        };
-      }
-
-      supervisorGroups[supervisorName].consultants.push(consultant);
-      supervisorGroups[supervisorName].totalSalesActual += salesActual;
-      supervisorGroups[supervisorName].totalSalesTarget += salesTarget;
-      supervisorGroups[supervisorName].totalAppsActual += appsActual;
-      supervisorGroups[supervisorName].totalAppsTarget += appsTarget;
-      supervisorGroups[supervisorName].totalLoanDealsVol += loanDealsVol; // NEW: Aggregate loan deals
-      supervisorGroups[supervisorName].totalCardDealsVol += cardDealsVol; // NEW: Aggregate card deals
-    });
-
-    // Convert to supervisors array with calculated metrics
-    const supervisors = Object.values(supervisorGroups).map((group) => {
-      const salesAchievement =
-        group.totalSalesTarget > 0
-          ? (group.totalSalesActual / group.totalSalesTarget) * 100
-          : 0;
-      const appsAchievement =
-        group.totalAppsTarget > 0
-          ? (group.totalAppsActual / group.totalAppsTarget) * 100
-          : 0;
-
-      return {
-        ...group,
-        salesAchievement,
-        appsAchievement,
-        overallAchievement: (salesAchievement + appsAchievement) / 2,
-        teamSize: group.consultants.length,
-        // Include the aggregated deal volumes for points system
-        loanDealsVol: group.totalLoanDealsVol,
-        cardDealsVol: group.totalCardDealsVol,
-      };
-    });
-
-    // Use the Excel totals for company metrics since they're authoritative
-    const companyMetrics = {
-      totalSalesActual: excelTotalSalesActual,
-      totalSalesTarget: excelTotalSalesTarget,
-      totalAppsActual: totalRow
-        ? parseInt(totalRow["TotalRealAppsVol"] || 0)
-        : 0,
-      totalAppsTarget: totalRow ? parseInt(totalRow["RealAppsTarget"] || 0) : 0,
-      totalConsultants: consultantsList.length,
-      totalSupervisors: supervisors.length,
-    };
-
-    // Calculate percentages
-    companyMetrics.salesAchievement =
-      companyMetrics.totalSalesTarget > 0
-        ? (companyMetrics.totalSalesActual / companyMetrics.totalSalesTarget) *
-          100
-        : 0;
-    companyMetrics.appsAchievement =
-      companyMetrics.totalAppsTarget > 0
-        ? (companyMetrics.totalAppsActual / companyMetrics.totalAppsTarget) *
-          100
-        : 0;
-    companyMetrics.overallAchievement =
-      (companyMetrics.salesAchievement + companyMetrics.appsAchievement) / 2;
-
-    console.log("=== FINAL SUPERVISORS DATA ===");
-    supervisors.forEach((sup) => {
-      console.log(
-        `${sup.supervisorName}: Loans=${sup.loanDealsVol}, Cards=${sup.cardDealsVol}`
+          totalMyWorldTarget: 0,
+          totalMyWorldFundedVol: 0,
+          totalFuneralTarget: 0,
+          totalFuneralVol: 0,
+          totalInvestSales: 0,
+          totalInvestTarget: 0,
+          totalInvestApps: 0,
+        }
       );
-    });
+    }
+
+    companyMetrics.investAchievement =
+      companyMetrics.totalInvestTarget > 0
+        ? (companyMetrics.totalInvestSales / companyMetrics.totalInvestTarget) *
+          100
+        : 0;
 
     return {
       supervisors,
-      consultants: consultantsList,
+      consultants: consultantsWithCircuit,
       companyMetrics,
+      pointsData: pointsBySupervisor,
     };
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen bg-gradient-to-br from-slate-900 to-slate-800">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <h2 className="text-xl text-white font-bold">
-            Loading F1 Racing Dashboard...
-          </h2>
-          <p className="text-gray-300">Processing Excel data...</p>
-        </div>
-      </div>
-    );
-  }
+  if (loading) return <div>Loading F1 Racing Dashboard...</div>;
+  if (error) return <div>Error: {error}</div>;
 
-  if (error) {
-    return (
-      <div className="flex items-center justify-center h-screen bg-gradient-to-br from-slate-900 to-slate-800">
-        <div className="text-center max-w-md p-8 bg-red-900/20 border border-red-500/30 rounded-lg">
-          <h2 className="text-xl text-red-400 font-bold mb-4">
-            Error Loading Dashboard
-          </h2>
-          <p className="text-gray-300 mb-4">{error}</p>
-          <p className="text-sm text-gray-400">
-            Make sure Book1.xlsx is placed in your public folder and contains
-            the required columns: Supervisor Name, Consultant Name,
-            TotalSalesVal, SalesValTarget, TotalRealAppsVol, RealAppsTarget
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  console.log(
-    "F1RacingDashboard: Passing data to MainDashboard component:",
-    data
-  );
   return <MainDashboard data={data} />;
 }

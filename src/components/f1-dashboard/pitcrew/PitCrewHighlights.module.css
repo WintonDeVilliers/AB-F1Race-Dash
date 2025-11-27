@@ -2,6 +2,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 1.5rem;
+  background-color: #2d3748;
 }
 
 .categoryCard {
@@ -103,19 +104,28 @@
 }
 
 .barFill::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 100%
+  );
   animation: shimmer 2s infinite;
 }
 
 @keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 .performanceText {
@@ -175,16 +185,16 @@
   .container {
     grid-template-columns: 1fr;
   }
-  
+
   .cardHeader {
     flex-direction: column;
     gap: 1rem;
   }
-  
+
   .iconSection {
     gap: 0.75rem;
   }
-  
+
   .categoryName {
     font-size: 1rem;
   }

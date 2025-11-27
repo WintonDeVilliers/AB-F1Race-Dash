@@ -1,3 +1,4 @@
+// --- UPDATED GaugeDisplay.jsx ---
 import { useMemo } from "react";
 import styles from "./GaugeDisplay.module.css";
 
@@ -6,32 +7,67 @@ export default function GaugeDisplay({
   targetValue,
   averageAchievement,
   title,
+  valueType = "currency", // "currency" or "volume"
 }) {
   const gaugeData = useMemo(() => {
-    const percentage = targetValue > 0 ? (currentValue / targetValue) * 100 : 0;
+    const safeCurrent =
+      typeof currentValue === "number"
+        ? currentValue
+        : parseFloat(currentValue) || 0;
+    const safeTarget =
+      typeof targetValue === "number"
+        ? targetValue
+        : parseFloat(targetValue) || 0;
+
+    const percentage = safeTarget > 0 ? (safeCurrent / safeTarget) * 100 : 0;
     const clampedPercentage = Math.min(Math.max(percentage, 0), 100);
 
     // Needle angle (semi-circle from -90° to +90°)
     const needleAngle = -90 + (clampedPercentage / 100) * 180;
 
+    // Format helper for currency to intelligently choose M / k / full value
+    const formatCurrencySmart = (val) => {
+      const n = Math.abs(val);
+      if (n >= 1000000) {
+        return `R${(val / 1000000).toFixed(1)}M`;
+      } else if (n >= 1000) {
+        return `R${(val / 1000).toFixed(1)}k`;
+      } else {
+        // show full number with thousand separators
+        return `R${Math.round(val).toLocaleString()}`;
+      }
+    };
+
+    let currentFormatted, targetFormatted;
+
+    if (valueType === "currency") {
+      currentFormatted = formatCurrencySmart(safeCurrent);
+      targetFormatted = formatCurrencySmart(safeTarget);
+    } else {
+      // Volume / counts — display with locale separators
+      currentFormatted = Math.round(safeCurrent).toLocaleString();
+      targetFormatted = Math.round(safeTarget).toLocaleString();
+    }
+
     return {
       percentage: clampedPercentage,
       needleAngle,
-      currentFormatted: `R${(currentValue / 1000000).toFixed(1)}M`,
-      targetFormatted: `R${(targetValue / 1000000).toFixed(1)}M`,
-      currentValue,
-      targetValue,
+      currentFormatted,
+      targetFormatted,
+      currentValue: safeCurrent,
+      targetValue: safeTarget,
     };
-  }, [currentValue, targetValue]);
+  }, [currentValue, targetValue, valueType]);
 
   return (
     <div className={styles.container}>
-      {title && <div className={styles.gaugeTitle}>{title}</div>}
+      {title && (
+        <div className={`${styles.gaugeTitle} ${styles.Slackey}`}>{title}</div>
+      )}
 
       <div className={styles.gaugeWrapper}>
         <svg viewBox="0 0 200 120" className={styles.gaugeSvg}>
           <defs>
-            {/* Speedometer gradient */}
             <linearGradient
               id="gaugeGradient"
               x1="0%"
@@ -39,9 +75,9 @@ export default function GaugeDisplay({
               x2="100%"
               y2="0%"
             >
-              <stop offset="0%" stopColor="#00ffff" /> {/* teal */}
-              <stop offset="50%" stopColor="#ffff00" /> {/* yellow */}
-              <stop offset="100%" stopColor="#ff0000" /> {/* red */}
+              <stop offset="0%" stopColor="#00ffff" />
+              <stop offset="50%" stopColor="#ffff00" />
+              <stop offset="100%" stopColor="#ff0000" />
             </linearGradient>
           </defs>
 
@@ -55,7 +91,7 @@ export default function GaugeDisplay({
           />
 
           {/* Tick marks */}
-          {[...Array(11)].map((_, i) => {
+          {[...Array(20)].map((_, i) => {
             const angle = -90 + i * 18;
             const x1 = 100 + 72 * Math.cos((angle * Math.PI) / 180);
             const y1 = 100 + 72 * Math.sin((angle * Math.PI) / 180);
@@ -94,7 +130,7 @@ export default function GaugeDisplay({
             y1="100"
             x2="100"
             y2="30"
-            stroke="#ff4500"
+            stroke="#fff200ff"
             strokeWidth="3"
             strokeLinecap="round"
             transform={`rotate(${gaugeData.needleAngle} 100 100)`}
@@ -123,7 +159,13 @@ export default function GaugeDisplay({
       <div className={styles.achievement}>
         <div className={styles.achievementLabel}>Achieved</div>
         <div className={styles.achievementValue}>
-          {averageAchievement?.toFixed(1) || "0.0"}%
+          {(
+            averageAchievement ??
+            (gaugeData.targetValue > 0
+              ? (gaugeData.currentValue / gaugeData.targetValue) * 100
+              : 0)
+          ).toFixed(1)}
+          %
         </div>
       </div>
     </div>
