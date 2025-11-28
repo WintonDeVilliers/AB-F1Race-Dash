@@ -1,8 +1,30 @@
+/*  */
+
 .container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  /* grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); */
   gap: 1.5rem;
-  background-color: #2d3748;
+  background: #001634; /* fallback color */
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url(/consultantViewImage.png) repeat-x center top;
+  background-size: cover;
+  filter: blur(3px); /* ADJUST BLUR HERE */
+  opacity: 0.4; /* ADJUST TRANSPARENCY HERE */
+  z-index: 0;
+}
+
+.container > * {
+  position: relative;
+  z-index: 1;
 }
 
 .categoryCard {

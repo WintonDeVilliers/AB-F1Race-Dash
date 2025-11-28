@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
 import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 import styles from "../../../styles/RacingComponents.module.css";
+import PitCrewHighlights from "../../../components/f1-dashboard/pitcrew/PitCrewHighlights";
 
 export default function PitCrewView({ consultants }) {
   console.log(consultants);
@@ -141,6 +142,7 @@ export default function PitCrewView({ consultants }) {
   return (
     <div className={styles.pitCrewView}>
       <div className={styles.pitCrewContainer}>
+        <PitCrewHighlights consultants={consultants} />
         {/* Global Carousel Controls */}
         <div className={styles.globalCarouselHeader}>
           {/* <h2 className={styles.sectionTitle}>TEAM RACING CHAMPIONSHIP</h2> */}
@@ -157,20 +159,6 @@ export default function PitCrewView({ consultants }) {
             >
               <ChevronLeft className={styles.carouselIcon} />
             </Button>
-
-            <div className={styles.teamIndicator}>
-              <span className={styles.teamCounter}>
-                Team {currentTeamIndex + 1} of {totalTeams}
-                <span className={styles.pageCounter}>
-                  • Page {currentPageIndex + 1} of {totalPagesForTeam}
-                </span>
-              </span>
-              <span className={styles.teamName}>{currentSupervisor}</span>
-              <span className={styles.memberCounter}>
-                Showing {currentPageMembers.length} of {sortedMembers.length}{" "}
-                members
-              </span>
-            </div>
 
             <Button
               variant="outline"
@@ -193,6 +181,19 @@ export default function PitCrewView({ consultants }) {
                 <Play className={styles.carouselIcon} />
               )}
             </Button>
+            <div className={styles.teamIndicator}>
+              <span className={styles.teamCounter}>
+                Team {currentTeamIndex + 1} of {totalTeams}
+                {/* <span className={styles.pageCounter}>
+                  • Page {currentPageIndex + 1} of {totalPagesForTeam}
+                </span> */}
+              </span>
+              {/* <span className={styles.teamName}>{currentSupervisor}</span> */}
+              {/* <span className={styles.memberCounter}>
+                Showing {currentPageMembers.length} of {sortedMembers.length}{" "}
+                members
+              </span> */}
+            </div>
           </div>
         </div>
 

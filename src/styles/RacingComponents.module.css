@@ -1036,10 +1036,11 @@
 }
 
 .pitCrewCard {
-  background: var(--corporate-dark-blue);
+  /* background: var(--corporate-dark-blue); */
   border: 1px solid var(--corporate-text-muted);
   border-radius: 0.25rem;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3);
+  background: url(/consultantViewTeam.png) repeat-x center top;
   transition: 0.2s;
 }
 

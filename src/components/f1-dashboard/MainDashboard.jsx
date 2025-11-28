@@ -42,7 +42,6 @@ export default function MainDashboard({ data }) {
         return (
           <>
             <PitCrewPage data={data} />
-            <PitCrewHighlights consultants={data.consultants} />
           </>
         );
       case "monaco":
